@@ -30,8 +30,8 @@ class MediaInformationSession extends AbstractSession {
 
   /// Creates a new MediaInformation session with [argumentsArray].
   static Future<MediaInformationSession> create(List<String> argumentsArray,
-      [MediaInformationSessionCompleteCallback? completeCallback = null,
-      LogCallback? logCallback = null]) async {
+      [MediaInformationSessionCompleteCallback? completeCallback,
+      LogCallback? logCallback]) async {
     final session =
         await AbstractSession.createMediaInformationSession(argumentsArray);
     final sessionId = session.getSessionId();
@@ -44,21 +44,24 @@ class MediaInformationSession extends AbstractSession {
   }
 
   /// Returns the media information extracted in this session.
-  MediaInformation? getMediaInformation() => this._mediaInformation;
+  MediaInformation? getMediaInformation() => _mediaInformation;
 
   /// Sets the media information extracted in this session.
   void setMediaInformation(MediaInformation? mediaInformation) {
-    this._mediaInformation = mediaInformation;
+    _mediaInformation = mediaInformation;
   }
 
   /// Returns the session specific complete callback.
   MediaInformationSessionCompleteCallback? getCompleteCallback() =>
       FFmpegKitFactory.getMediaInformationSessionCompleteCallback(
-          this.getSessionId());
+          getSessionId());
 
+  @override
   bool isFFmpeg() => false;
 
+  @override
   bool isFFprobe() => false;
 
+  @override
   bool isMediaInformation() => true;
 }

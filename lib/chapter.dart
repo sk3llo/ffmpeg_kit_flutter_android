@@ -27,41 +27,41 @@ class Chapter {
   static const keyEndTime = "end_time";
   static const keyTags = "tags";
 
-  Map<dynamic, dynamic>? _allProperties;
+  final Map<dynamic, dynamic>? _allProperties;
 
   /// Creates a new [Chapter] instance
   Chapter(this._allProperties);
 
   /// Returns id.
-  int? getId() => this.getNumberProperty(Chapter.keyId)?.toInt();
+  int? getId() => getNumberProperty(Chapter.keyId)?.toInt();
 
   /// Returns time base.
-  String? getTimeBase() => this.getStringProperty(Chapter.keyTimeBase);
+  String? getTimeBase() => getStringProperty(Chapter.keyTimeBase);
 
   /// Returns start.
-  int? getStart() => this.getNumberProperty(Chapter.keyStart)?.toInt();
+  int? getStart() => getNumberProperty(Chapter.keyStart)?.toInt();
 
   /// Returns start time.
-  String? getStartTime() => this.getStringProperty(Chapter.keyStartTime);
+  String? getStartTime() => getStringProperty(Chapter.keyStartTime);
 
   /// Returns end.
-  int? getEnd() => this.getNumberProperty(Chapter.keyEnd)?.toInt();
+  int? getEnd() => getNumberProperty(Chapter.keyEnd)?.toInt();
 
   /// Returns end time.
-  String? getEndTime() => this.getStringProperty(Chapter.keyEndTime);
+  String? getEndTime() => getStringProperty(Chapter.keyEndTime);
 
   /// Returns all tags.
-  Map<dynamic, dynamic>? getTags() => this.getProperty(Chapter.keyTags);
+  Map<dynamic, dynamic>? getTags() => getProperty(Chapter.keyTags);
 
   /// Returns the chapter property associated with the key.
-  String? getStringProperty(String key) => this._allProperties?[key];
+  String? getStringProperty(String key) => _allProperties?[key];
 
   /// Returns the chapter property associated with the key.
-  num? getNumberProperty(String key) => this._allProperties?[key];
+  num? getNumberProperty(String key) => _allProperties?[key];
 
   /// Returns the chapter property associated with the key.
-  dynamic getProperty(String key) => this._allProperties?[key];
+  dynamic getProperty(String key) => _allProperties?[key];
 
   /// Returns all properties found.
-  Map<dynamic, dynamic>? getAllProperties() => this._allProperties;
+  Map<dynamic, dynamic>? getAllProperties() => _allProperties;
 }

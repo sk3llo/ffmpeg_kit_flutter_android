@@ -1,24 +1,6 @@
-/*
- * Copyright (c) 2019-2022 Taner Sener
- *
- * This file is part of FFmpegKit.
- *
- * FFmpegKit is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * FFmpegKit is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with FFmpegKit.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 import 'package:ffmpeg_kit_flutter_platform_interface/ffmpeg_kit_flutter_platform_interface.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
 
 import 'abstract_session.dart';
 import 'ffmpeg_kit_config.dart';
@@ -33,10 +15,10 @@ import 'statistics_callback.dart';
 class FFmpegSession extends AbstractSession {
   /// Creates a new FFmpeg session with [argumentsArray].
   static Future<FFmpegSession> create(List<String> argumentsArray,
-      [FFmpegSessionCompleteCallback? completeCallback = null,
-      LogCallback? logCallback = null,
-      StatisticsCallback? statisticsCallback = null,
-      LogRedirectionStrategy? logRedirectionStrategy = null]) async {
+      [FFmpegSessionCompleteCallback? completeCallback,
+      LogCallback? logCallback,
+      StatisticsCallback? statisticsCallback,
+      LogRedirectionStrategy? logRedirectionStrategy]) async {
     final session = await AbstractSession.createFFmpegSession(
         argumentsArray, logRedirectionStrategy);
     final sessionId = session.getSessionId();
@@ -51,11 +33,11 @@ class FFmpegSession extends AbstractSession {
 
   /// Returns the session specific statistics callback.
   StatisticsCallback? getStatisticsCallback() =>
-      FFmpegKitFactory.getStatisticsCallback(this.getSessionId());
+      FFmpegKitFactory.getStatisticsCallback(getSessionId());
 
   /// Returns the session specific complete callback.
   FFmpegSessionCompleteCallback? getCompleteCallback() =>
-      FFmpegKitFactory.getFFmpegSessionCompleteCallback(this.getSessionId());
+      FFmpegKitFactory.getFFmpegSessionCompleteCallback(getSessionId());
 
   /// Returns all statistics entries generated for this session. If there are
   /// asynchronous statistics that are not delivered yet, this method waits for
@@ -64,7 +46,7 @@ class FFmpegSession extends AbstractSession {
     try {
       await FFmpegKitConfig.init();
       return FFmpegKitPlatform.instance
-          .ffmpegSessionGetAllStatistics(this.getSessionId(), waitTimeout)
+          .ffmpegSessionGetAllStatistics(getSessionId(), waitTimeout)
           .then((allStatistics) {
         if (allStatistics == null) {
           return List.empty();
@@ -77,7 +59,7 @@ class FFmpegSession extends AbstractSession {
         }
       });
     } on PlatformException catch (e, stack) {
-      print("Plugin getAllStatistics error: ${e.message}");
+      debugPrint("Plugin getAllStatistics error: ${e.message}");
       return Future.error("getAllStatistics failed.", stack);
     }
   }
@@ -89,7 +71,7 @@ class FFmpegSession extends AbstractSession {
     try {
       await FFmpegKitConfig.init();
       return FFmpegKitPlatform.instance
-          .ffmpegSessionGetStatistics(this.getSessionId())
+          .ffmpegSessionGetStatistics(getSessionId())
           .then((statistics) {
         if (statistics == null) {
           return List.empty();
@@ -102,24 +84,27 @@ class FFmpegSession extends AbstractSession {
         }
       });
     } on PlatformException catch (e, stack) {
-      print("Plugin getStatistics error: ${e.message}");
+      debugPrint("Plugin getStatistics error: ${e.message}");
       return Future.error("getStatistics failed.", stack);
     }
   }
 
   /// Returns the last received statistics entry.
   Future<Statistics?> getLastReceivedStatistics() async =>
-      this.getStatistics().then((statistics) {
-        if (statistics.length > 0) {
+      getStatistics().then((statistics) {
+        if (statistics.isNotEmpty) {
           return statistics[statistics.length - 1];
         } else {
           return null;
         }
       });
 
+  @override
   bool isFFmpeg() => true;
 
+  @override
   bool isFFprobe() => false;
 
+  @override
   bool isMediaInformation() => false;
 }

@@ -1,24 +1,6 @@
-/*
- * Copyright (c) 2019-2022 Taner Sener
- *
- * This file is part of FFmpegKit.
- *
- * FFmpegKit is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Lesser General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * FFmpegKit is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public License
- * along with FFmpegKit.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 import 'package:ffmpeg_kit_flutter_platform_interface/ffmpeg_kit_flutter_platform_interface.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/material.dart';
 
 import 'ffmpeg_kit_config.dart';
 import 'ffmpeg_session.dart';
@@ -29,7 +11,7 @@ import 'statistics_callback.dart';
 
 /// Main class to run "FFmpeg" commands.
 class FFmpegKit {
-  static FFmpegKitPlatform _platform = FFmpegKitPlatform.instance;
+  static final FFmpegKitPlatform _platform = FFmpegKitPlatform.instance;
 
   /// Synchronously executes FFmpeg command provided. Space character is used
   /// to split command into arguments. You can use single or double quote
@@ -54,9 +36,9 @@ class FFmpegKit {
   /// Note that this method returns immediately and does not wait the execution to complete. You must use an
   /// [FFmpegSessionCompleteCallback] if you want to be notified about the result.
   static Future<FFmpegSession> executeAsync(String command,
-          [FFmpegSessionCompleteCallback? completeCallback = null,
-          LogCallback? logCallback = null,
-          StatisticsCallback? statisticsCallback = null]) async =>
+          [FFmpegSessionCompleteCallback? completeCallback,
+          LogCallback? logCallback,
+          StatisticsCallback? statisticsCallback]) async =>
       FFmpegKit.executeWithArgumentsAsync(
           FFmpegKitConfig.parseArguments(command),
           completeCallback,
@@ -69,9 +51,9 @@ class FFmpegKit {
   /// [FFmpegSessionCompleteCallback] if you want to be notified about the result.
   static Future<FFmpegSession> executeWithArgumentsAsync(
       List<String> commandArguments,
-      [FFmpegSessionCompleteCallback? completeCallback = null,
-      LogCallback? logCallback = null,
-      StatisticsCallback? statisticsCallback = null]) async {
+      [FFmpegSessionCompleteCallback? completeCallback,
+      LogCallback? logCallback,
+      StatisticsCallback? statisticsCallback]) async {
     final session = await FFmpegSession.create(commandArguments,
         completeCallback, logCallback, statisticsCallback, null);
 
@@ -81,7 +63,7 @@ class FFmpegKit {
   }
 
   /// Cancels the session specified with [sessionId].
-  static Future<void> cancel([int? sessionId = null]) async {
+  static Future<void> cancel([int? sessionId]) async {
     try {
       await FFmpegKitConfig.init();
       if (sessionId == null) {
@@ -90,7 +72,7 @@ class FFmpegKit {
         return _platform.ffmpegKitCancelSession(sessionId);
       }
     } on PlatformException catch (e, stack) {
-      print("Plugin cancel error: ${e.message}");
+      debugPrint("Plugin cancel error: ${e.message}");
       return Future.error("cancel failed.", stack);
     }
   }
@@ -111,7 +93,7 @@ class FFmpegKit {
         }
       });
     } on PlatformException catch (e, stack) {
-      print("Plugin listSessions error: ${e.message}");
+      debugPrint("Plugin listSessions error: ${e.message}");
       return Future.error("listSessions failed.", stack);
     }
   }

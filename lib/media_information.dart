@@ -32,60 +32,60 @@ class MediaInformation {
   static const keyBitRate = "bit_rate";
   static const keyTags = "tags";
 
-  Map<dynamic, dynamic>? _allProperties;
+  final Map<dynamic, dynamic>? _allProperties;
 
   /// Creates a new [MediaInformation] instance
   MediaInformation(this._allProperties);
 
   /// Returns file name.
   String? getFilename() =>
-      this.getStringFormatProperty(MediaInformation.keyFilename);
+      getStringFormatProperty(MediaInformation.keyFilename);
 
   /// Returns format.
   String? getFormat() =>
-      this.getStringFormatProperty(MediaInformation.keyFormat);
+      getStringFormatProperty(MediaInformation.keyFormat);
 
   /// Returns long format.
   String? getLongFormat() =>
-      this.getStringFormatProperty(MediaInformation.keyFormatLong);
+      getStringFormatProperty(MediaInformation.keyFormatLong);
 
   /// Returns duration.
   String? getDuration() =>
-      this.getStringFormatProperty(MediaInformation.keyDuration);
+      getStringFormatProperty(MediaInformation.keyDuration);
 
   /// Returns start time.
   String? getStartTime() =>
-      this.getStringFormatProperty(MediaInformation.keyStartTime);
+      getStringFormatProperty(MediaInformation.keyStartTime);
 
   /// Returns size.
-  String? getSize() => this.getStringFormatProperty(MediaInformation.keySize);
+  String? getSize() => getStringFormatProperty(MediaInformation.keySize);
 
   /// Returns bitrate.
   String? getBitrate() =>
-      this.getStringFormatProperty(MediaInformation.keyBitRate);
+      getStringFormatProperty(MediaInformation.keyBitRate);
 
   /// Returns all tags.
   Map<dynamic, dynamic>? getTags() =>
-      this.getFormatProperty(StreamInformation.keyTags);
+      getFormatProperty(StreamInformation.keyTags);
 
   /// Returns the property associated with the key.
-  String? getStringProperty(String key) => this.getAllProperties()?[key];
+  String? getStringProperty(String key) => getAllProperties()?[key];
 
   /// Returns the property associated with the key.
-  num? getNumberProperty(String key) => this.getAllProperties()?[key];
+  num? getNumberProperty(String key) => getAllProperties()?[key];
 
   /// Returns the property associated with the key.
-  dynamic getProperty(String key) => this.getAllProperties()?[key];
+  dynamic getProperty(String key) => getAllProperties()?[key];
 
   /// Returns the format property associated with the key.
   String? getStringFormatProperty(String key) =>
-      this.getFormatProperties()?[key];
+      getFormatProperties()?[key];
 
   /// Returns the format property associated with the key.
-  num? getNumberFormatProperty(String key) => this.getFormatProperties()?[key];
+  num? getNumberFormatProperty(String key) => getFormatProperties()?[key];
 
   /// Returns the format property associated with the key.
-  dynamic getFormatProperty(String key) => this.getFormatProperties()?[key];
+  dynamic getFormatProperty(String key) => getFormatProperties()?[key];
 
   /// Returns all streams found as a list.
   List<StreamInformation> getStreams() {
@@ -93,9 +93,9 @@ class MediaInformation {
         List<StreamInformation>.empty(growable: true);
 
     dynamic createStreamInformation(Map<dynamic, dynamic> streamProperties) =>
-        list.add(new StreamInformation(streamProperties));
+        list.add(StreamInformation(streamProperties));
 
-    this._allProperties?["streams"]?.forEach((Object? stream) {
+    _allProperties?["streams"]?.forEach((Object? stream) {
       createStreamInformation(stream as Map<dynamic, dynamic>);
     });
 
@@ -107,9 +107,9 @@ class MediaInformation {
     final List<Chapter> list = List<Chapter>.empty(growable: true);
 
     dynamic createChapter(Map<dynamic, dynamic> chapterProperties) =>
-        list.add(new Chapter(chapterProperties));
+        list.add(Chapter(chapterProperties));
 
-    this._allProperties?["chapters"]?.forEach((Object? chapter) {
+    _allProperties?["chapters"]?.forEach((Object? chapter) {
       createChapter(chapter as Map<dynamic, dynamic>);
     });
 
@@ -118,8 +118,8 @@ class MediaInformation {
 
   /// Returns all format properties found.
   Map<dynamic, dynamic>? getFormatProperties() =>
-      this._allProperties?[keyFormatProperties];
+      _allProperties?[keyFormatProperties];
 
   /// Returns all properties found, including stream properties.
-  Map<dynamic, dynamic>? getAllProperties() => this._allProperties;
+  Map<dynamic, dynamic>? getAllProperties() => _allProperties;
 }

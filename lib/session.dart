@@ -53,7 +53,7 @@ abstract class Session {
   /// Returns all log entries generated for this session. If there are
   /// asynchronous logs that are not delivered yet, this method waits for
   /// them until [waitTimeout].
-  Future<List<Log>> getAllLogs([int? waitTimeout = null]);
+  Future<List<Log>> getAllLogs([int? waitTimeout]);
 
   /// Returns all log entries delivered for this session. Note that if there
   /// are asynchronous logs that are not delivered yet, this method
@@ -63,7 +63,7 @@ abstract class Session {
   /// Returns all log entries generated for this session as a concatenated
   /// string. If there are asynchronous logs that are not delivered yet,
   /// this method waits for them until [waitTimeout].
-  Future<String?> getAllLogsAsString([int? waitTimeout = null]);
+  Future<String?> getAllLogsAsString([int? waitTimeout]);
 
   /// Returns all log entries delivered for this session as a concatenated
   /// string. Note that if there are asynchronous logs that are not

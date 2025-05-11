@@ -31,51 +31,51 @@ class Statistics {
   Statistics(this._sessionId, this._videoFrameNumber, this._videoFps,
       this._videoQuality, this._size, this._time, this._bitrate, this._speed);
 
-  int getSessionId() => this._sessionId;
+  int getSessionId() => _sessionId;
 
   void setSessionId(int sessionId) {
-    this._sessionId = sessionId;
+    _sessionId = sessionId;
   }
 
-  int getVideoFrameNumber() => this._videoFrameNumber;
+  int getVideoFrameNumber() => _videoFrameNumber;
 
   void setVideoFrameNumber(int videoFrameNumber) {
-    this._videoFrameNumber = videoFrameNumber;
+    _videoFrameNumber = videoFrameNumber;
   }
 
-  double getVideoFps() => this._videoFps;
+  double getVideoFps() => _videoFps;
 
   void setVideoFps(double videoFps) {
-    this._videoFps = videoFps;
+    _videoFps = videoFps;
   }
 
-  double getVideoQuality() => this._videoQuality;
+  double getVideoQuality() => _videoQuality;
 
   void setVideoQuality(double videoQuality) {
-    this._videoQuality = videoQuality;
+    _videoQuality = videoQuality;
   }
 
-  int getSize() => this._size;
+  int getSize() => _size;
 
   void setSize(int size) {
-    this._size = size;
+    _size = size;
   }
 
-  int getTime() => this._time;
+  int getTime() => _time;
 
   void setTime(int time) {
-    this._time = time;
+    _time = time;
   }
 
-  double getBitrate() => this._bitrate;
+  double getBitrate() => _bitrate;
 
   void setBitrate(double bitrate) {
-    this._bitrate = bitrate;
+    _bitrate = bitrate;
   }
 
-  double getSpeed() => this._speed;
+  double getSpeed() => _speed;
 
   void setSpeed(double speed) {
-    this._speed = speed;
+    _speed = speed;
   }
 }

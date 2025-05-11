@@ -27,9 +27,9 @@ import 'src/ffmpeg_kit_factory.dart';
 class FFprobeSession extends AbstractSession {
   /// Creates a new FFprobe session with [argumentsArray].
   static Future<FFprobeSession> create(List<String> argumentsArray,
-      [FFprobeSessionCompleteCallback? completeCallback = null,
-      LogCallback? logCallback = null,
-      LogRedirectionStrategy? logRedirectionStrategy = null]) async {
+      [FFprobeSessionCompleteCallback? completeCallback,
+      LogCallback? logCallback,
+      LogRedirectionStrategy? logRedirectionStrategy]) async {
     final session = await AbstractSession.createFFprobeSession(
         argumentsArray, logRedirectionStrategy);
     final sessionId = session.getSessionId();
@@ -43,11 +43,14 @@ class FFprobeSession extends AbstractSession {
 
   /// Returns the session specific complete callback.
   FFprobeSessionCompleteCallback? getCompleteCallback() =>
-      FFmpegKitFactory.getFFprobeSessionCompleteCallback(this.getSessionId());
+      FFmpegKitFactory.getFFprobeSessionCompleteCallback(getSessionId());
 
+  @override
   bool isFFmpeg() => false;
 
+  @override
   bool isFFprobe() => true;
 
+  @override
   bool isMediaInformation() => false;
 }

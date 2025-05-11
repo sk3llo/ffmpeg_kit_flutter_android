@@ -30,14 +30,14 @@ import '../statistics.dart';
 import '../statistics_callback.dart';
 
 final ffmpegSessionCompleteCallbackMap =
-    new Map<int, FFmpegSessionCompleteCallback>();
+    <int, FFmpegSessionCompleteCallback>{};
 final ffprobeSessionCompleteCallbackMap =
-    new Map<int, FFprobeSessionCompleteCallback>();
+    <int, FFprobeSessionCompleteCallback>{};
 final mediaInformationSessionCompleteCallbackMap =
-    new Map<int, MediaInformationSessionCompleteCallback>();
-final logCallbackMap = new Map<int, LogCallback>();
-final statisticsCallbackMap = new Map<int, StatisticsCallback>();
-final logRedirectionStrategyMap = new Map<int, LogRedirectionStrategy>();
+    <int, MediaInformationSessionCompleteCallback>{};
+final logCallbackMap = <int, LogCallback>{};
+final statisticsCallbackMap = <int, StatisticsCallback>{};
+final logRedirectionStrategyMap = <int, LogRedirectionStrategy>{};
 
 class FFmpegKitFactory {
   static LogCallback? _logCallback;
@@ -48,7 +48,7 @@ class FFmpegKitFactory {
       _mediaInformationSessionCompleteCallback;
 
   static Statistics mapToStatistics(Map<dynamic, dynamic> statisticsMap) =>
-      new Statistics(
+      Statistics(
           statisticsMap["sessionId"].toInt(),
           statisticsMap["videoFrameNumber"].toInt(),
           statisticsMap["videoFps"],
@@ -59,7 +59,7 @@ class FFmpegKitFactory {
           statisticsMap["speed"]);
 
   static Log mapToLog(Map<dynamic, dynamic> logMap) =>
-      new Log(logMap["sessionId"], logMap["level"], logMap["message"]);
+      Log(logMap["sessionId"], logMap["level"], logMap["message"]);
 
   static Session mapToSession(Map<dynamic, dynamic> sessionMap) {
     switch (sessionMap["type"]) {
@@ -93,7 +93,7 @@ class FFmpegKitFactory {
   static MediaInformation? mapToNullableMediaInformation(
       Map<dynamic, dynamic>? mediaInformationMap) {
     if (mediaInformationMap != null) {
-      return new MediaInformation(mediaInformationMap);
+      return MediaInformation(mediaInformationMap);
     } else {
       return null;
     }
