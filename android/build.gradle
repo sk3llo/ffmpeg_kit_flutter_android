@@ -59,7 +59,12 @@ android {
 
     task setupDependencies(type: Exec) {
         workingDir '.'
-        commandLine 'sh', '-c', 'chmod +x ../scripts/setup_android.sh && ../scripts/setup_android.sh'
+        if (System.getProperty("os.name").toLowerCase().contains("win")) {
+            commandLine 'cmd', '/c', 'src\\main\\jni\\build.bat'
+        }
+        else {
+            commandLine 'sh', '-c', 'chmod +x ../scripts/setup_android.sh && ../scripts/setup_android.sh'
+        }
         onlyIf { !file('libs/com.arthenica.ffmpegkit-flutter-6.0.aar').exists() }
     }
 }

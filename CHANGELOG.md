@@ -1,3 +1,8 @@
+## 1.2.0
+
+* Added `build.bat` jni
+* Updated Gradle script in order to be able to download and unpack .aar on Windows.
+
 ## 1.1.3
 
 * Commented annoying Gradle println
