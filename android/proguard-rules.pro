@@ -1,0 +1,3 @@
+-dontobfuscate
+-dontoptimize
+-keep class com.arthenica.ffmpegkit.** { *; }

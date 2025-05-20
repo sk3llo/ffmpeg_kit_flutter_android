@@ -53,26 +53,22 @@ class StreamInformation {
   String? getCodec() => getStringProperty(StreamInformation.keyCodec);
 
   /// Returns stream codec in long format.
-  String? getFullCodec() =>
-      getStringProperty(StreamInformation.keyCodecLong);
+  String? getFullCodec() => getStringProperty(StreamInformation.keyCodecLong);
 
   /// Returns stream format.
   String? getFormat() => getStringProperty(StreamInformation.keyFormat);
 
   /// Returns width.
-  int? getWidth() =>
-      getNumberProperty(StreamInformation.keyWidth)?.toInt();
+  int? getWidth() => getNumberProperty(StreamInformation.keyWidth)?.toInt();
 
   /// Returns height.
-  int? getHeight() =>
-      getNumberProperty(StreamInformation.keyHeight)?.toInt();
+  int? getHeight() => getNumberProperty(StreamInformation.keyHeight)?.toInt();
 
   /// Returns bitrate.
   String? getBitrate() => getStringProperty(StreamInformation.keyBitRate);
 
   /// Returns sample rate.
-  String? getSampleRate() =>
-      getStringProperty(StreamInformation.keySampleRate);
+  String? getSampleRate() => getStringProperty(StreamInformation.keySampleRate);
 
   /// Returns sample format.
   String? getSampleFormat() =>
@@ -99,16 +95,14 @@ class StreamInformation {
       getStringProperty(StreamInformation.keyRealFrameRate);
 
   /// Returns time base.
-  String? getTimeBase() =>
-      getStringProperty(StreamInformation.keyTimeBase);
+  String? getTimeBase() => getStringProperty(StreamInformation.keyTimeBase);
 
   /// Returns codec time base.
   String? getCodecTimeBase() =>
       getStringProperty(StreamInformation.keyCodecTimeBase);
 
   /// Returns all tags.
-  Map<dynamic, dynamic>? getTags() =>
-      getProperty(StreamInformation.keyTags);
+  Map<dynamic, dynamic>? getTags() => getProperty(StreamInformation.keyTags);
 
   /// Returns the stream property associated with the key.
   String? getStringProperty(String key) => _allProperties?[key];

@@ -1,3 +1,7 @@
+## 1.3.0
+
+* New seamless Android .aar support
+
 ## 1.2.0
 
 * Added `build.bat` jni

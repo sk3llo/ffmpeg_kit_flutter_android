@@ -10,18 +10,22 @@ buildscript {
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:8.7.0")
+        classpath("com.android.tools.build:gradle:8.7.3")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
     }
 }
 
-String localMavenPath = project.mkdir("build").absolutePath
+// Ensure unique path for local Maven repo
+String localMavenPath = project.mkdir("libs").absolutePath
 
 rootProject.allprojects {
     repositories {
         google()
         mavenCentral()
         maven { url "file://$localMavenPath" }
+        flatDir {
+            dirs localMavenPath
+        }
     }
 }
 
@@ -61,8 +65,7 @@ android {
         workingDir '.'
         if (System.getProperty("os.name").toLowerCase().contains("win")) {
             commandLine 'cmd', '/c', 'src\\main\\jni\\build.bat'
-        }
-        else {
+        } else {
             commandLine 'sh', '-c', 'chmod +x ../scripts/setup_android.sh && ../scripts/setup_android.sh'
         }
         onlyIf { !file('libs/com.arthenica.ffmpegkit-flutter-6.0.aar').exists() }
@@ -71,159 +74,258 @@ android {
 
 dependencies {
     implementation("androidx.annotation:annotation:1.9.1")
-    implementation('com.arthenica:smart-exception-java:0.2.1') // Dependency from Live
-    implementation('com.arthenica:smart-exception-common:0.2.1') // Dependency from Live
+    implementation('com.arthenica:smart-exception-java:0.2.1')
+    implementation('com.arthenica:smart-exception-common:0.2.1')
+    implementation(name: 'com.arthenica.ffmpegkit-flutter-6.0', ext: 'aar')
 }
 
-String aarPath = localMavenPath
+String aarPath = localMavenPath // Use the same variable as defined above
 
 task useAar {
-    File file = project.file("libs")
-    if (file.exists() && file.isDirectory()) {
-        file.listFiles(new FileFilter() {
-            @Override
-            boolean accept(File pathname) {
-                return pathname.name.endsWith(".aar")
+    description = "Processes AAR files from the 'libs' directory, publishes them to a local Maven repository, and adds them as dependencies."
+    group = "build setup"
+
+    dependsOn setupDependencies
+
+    project.logger.lifecycle("Starting useAar task. Processing AARs from 'libs' directory.")
+    File libsDir = project.file("libs")
+    if (!libsDir.exists() || !libsDir.isDirectory()) {
+        project.logger.warn("The 'libs' directory does not exist or is not a directory. Skipping AAR processing.")
+        return
+    }
+
+    File[] aarFiles = libsDir.listFiles(new FileFilter() {
+        @Override
+        boolean accept(File pathname) {
+            return pathname.name.toLowerCase().endsWith(".aar")
+        }
+    })
+
+    if (aarFiles == null || aarFiles.length == 0) {
+        project.logger.warn("No AAR files found in the 'libs' directory.")
+        return
+    }
+
+    aarFiles.each { item ->
+        project.logger.lifecycle("Processing AAR: ${item.name}")
+        String aarName = item.name.substring(0, item.name.length() - 4)
+
+        String[] aarInfo = aarName.split("-")
+
+        if (aarInfo.length < 3) {
+            project.logger.error("Could not parse groupId, artifactId, and version from AAR name: ${item.name}. Expected format: 'groupId-artifactId-version.aar'. Skipping this AAR.")
+            return
+        }
+
+        // Heuristic to combine parts if groupId contains hyphens (less robust)
+        // A better way is to enforce strict naming from the setupDependencies script.
+        String groupId = aarInfo[0]
+        String artifactId = aarInfo[1]
+        String version = aarInfo[aarInfo.length - 1] // Assume last part is version
+
+        if (aarInfo.length > 3) {
+            // If more than 3 parts, assume parts before the last two are groupId and artifactId
+            artifactId = aarInfo[aarInfo.length - 2]
+            groupId = aarInfo.toList().subList(0, aarInfo.length - 2).join("-")
+            project.logger.warn("AAR name '${item.name}' has multiple hyphens. Parsed as: G='${groupId}', A='${artifactId}', V='${version}'. Verify correctness.")
+        }
+
+        project.logger.lifecycle("  Parsed GAV: GroupId='${groupId}', ArtifactId='${artifactId}', Version='${version}'")
+
+        String calculatedSha1 = getFileSha1(item)
+        String calculatedMd5 = getFileMD5(item)
+
+        // Construct path for local Maven repository
+        // Example: build/localMaven/com/arthenica/ffmpegkit/ffmpeg-kit-core/6.0/
+        String mavenRepoPathStr = (aarPath + "/" + groupId.replace(".", "/") + "/" + artifactId + "/" + version).replace("\\", "/")
+        File mavenRepoDir = project.file(mavenRepoPathStr)
+        mavenRepoDir.mkdirs() // Ensure directory exists
+
+        String newAarName = artifactId + "-" + version + ".aar"
+        File targetAarFile = project.file(mavenRepoDir.absolutePath + "/" + newAarName)
+
+        // Copy AAR
+        project.copy {
+            from item.path
+            into mavenRepoDir
+            rename(item.name, newAarName)
+        }
+        project.logger.lifecycle("  Copied AAR to: ${targetAarFile.path}")
+
+        // Write MD5 and SHA1 for the AAR
+        project.file(targetAarFile.path + ".md5").write(calculatedMd5)
+        project.file(targetAarFile.path + ".sha1").write(calculatedSha1)
+
+        // Create and write POM file
+        String pomFileName = artifactId + "-" + version + ".pom"
+        File pomFile = project.file(mavenRepoDir.absolutePath + "/" + pomFileName)
+        pomFile.write(createPomStr(groupId, artifactId, version))
+        project.file(pomFile.path + ".md5").write(getFileMD5(pomFile))
+        project.file(pomFile.path + ".sha1").write(getFileSha1(pomFile))
+        project.logger.lifecycle("  Generated POM file: ${pomFile.path}")
+
+        // Create and write Maven metadata (simplified, usually at artifact level)
+        File artifactMetadataDir = mavenRepoDir.getParentFile() // Directory containing versions of this artifact
+        String metadataPath = artifactMetadataDir.path + "/maven-metadata.local.xml" // Suffix with .local for clarity
+        project.file(metadataPath).write(createMetadataStr(groupId, artifactId, version)) // This metadata is simplified
+        project.file(metadataPath + ".md5").write(getFileMD5(project.file(metadataPath)))
+        project.file(metadataPath + ".sha1").write(getFileSha1(project.file(metadataPath)))
+        project.logger.lifecycle("  Generated Maven metadata: ${metadataPath}")
+
+        // Add the dependency to the project
+        // This is the crucial step for making the AAR available to the compiler
+        String dependencyNotation = "${groupId}:${artifactId}:${version}"
+        dependencies.add("implementation", dependencyNotation)
+        project.logger.lifecycle("  Dynamically added dependency: implementation '${dependencyNotation}'")
+    }
+
+    // This block runs after all AARs have been processed and dependencies added.
+    // It attempts to "refresh" Gradle's view by resolving compile classpaths.
+    project.logger.lifecycle("[useAar - Post-Processing] Attempting to resolve compile classpath configurations to ensure AARs are recognized.")
+
+    def variants = null
+    if (android.hasProperty("applicationVariants")) { // For Android applications
+        variants = android.applicationVariants
+    } else if (android.hasProperty("libraryVariants")) { // For Android libraries
+        variants = android.libraryVariants
+    }
+
+    if (variants != null && !variants.isEmpty()) {
+        variants.all { variant ->
+            // The configuration name for compile classpath is typically <variantName>CompileClasspath
+            // e.g., "debugCompileClasspath", "releaseCompileClasspath"
+            String compileClasspathConfigName = variant.name + "CompileClasspath"
+            def config = project.configurations.findByName(compileClasspathConfigName)
+
+            if (config) {
+                project.logger.lifecycle("[useAar - Post-Processing] Resolving '${config.name}' for variant '${variant.name}'...")
+                try {
+                    // Resolve the configuration. This forces Gradle to process the newly added
+                    // dependencies from the local Maven repository for this specific variant's compile classpath.
+                    config.resolve()
+                    project.logger.lifecycle("[useAar - Post-Processing] Successfully resolved '${config.name}'. Artifacts found:")
+                    config.resolvedConfiguration.getResolvedArtifacts().each { artifact ->
+                        project.logger.lifecycle("  -> ${artifact.moduleVersion.id} (File: ${artifact.file.name})")
+                    }
+                } catch (Exception e) {
+                    // Log error but continue, as other variants might resolve.
+                    project.logger.error("[useAar - Post-Processing] Failed to resolve '${config.name}' for variant '${variant.name}': ${e.message}")
+                    // For more detailed error: project.logger.error("Stack trace:", e)
+                }
+            } else {
+                project.logger.warn("[useAar - Post-Processing] Compile classpath configuration '${compileClasspathConfigName}' not found for variant '${variant.name}'.")
             }
-        }).each { item ->
-            String aarName = item.name.substring(0, item.name.length() - 4)
-            String[] aarInfo = aarName.split("-")
-            String sha1 = getFileSha1(item)
-            String md5 = getFileMD5(item)
-//            println("aar: " + aarInfo + " file sha1:" + sha1 + " md5:" + md5)
-            String fromStr = item.path
-            String intoStr = aarPath + "/" + aarInfo[0].replace(".", "/") + "/" + aarInfo[1] + "/" + aarInfo[2]
-            String newName = aarInfo[1] + "-" + aarInfo[2] + ".aar"
-
-            project.copy {
-                from fromStr
-                into intoStr
-                rename(item.name, newName)
-            }
-
-            project.file(intoStr + "/" + newName + ".md5").write(md5)
-            project.file(intoStr + "/" + newName + ".sha1").write(sha1)
-
-            String pomPath = intoStr + "/" + newName.substring(0, newName.length() - 4) + ".pom"
-            project.file(pomPath).write(createPomStr(aarInfo[0], aarInfo[1], aarInfo[2]))
-            project.file(pomPath + ".md5").write(getFileMD5(project.file(pomPath)))
-            project.file(pomPath + ".sha1").write(getFileSha1(project.file(pomPath)))
-
-            String metadataPath = project.file(intoStr).getParentFile().path + "/maven-metadata.xml"
-            project.file(metadataPath).write(createMetadataStr(aarInfo[0], aarInfo[1], aarInfo[2]))
-            project.file(metadataPath + ".md5").write(getFileMD5(project.file(metadataPath)))
-            project.file(metadataPath + ".sha1").write(getFileSha1(project.file(metadataPath)))
-            dependencies {
-                implementation "${aarInfo[0]}:${aarInfo[1]}:${aarInfo[2]}"
+        }
+    } else {
+        project.logger.warn("[useAar - Post-Processing] Could not determine Android variants or no variants found. Skipping variant-specific classpath resolution.")
+        // Fallback: try to resolve 'implementation' if variant detection fails or is not applicable
+        def implConfig = project.configurations.findByName("implementation")
+        if (implConfig) {
+            project.logger.lifecycle("[useAar - Post-Processing] Fallback: Resolving 'implementation' configuration...")
+            try {
+                implConfig.resolve()
+                project.logger.lifecycle("[useAar - Post-Processing] Successfully resolved 'implementation' configuration.")
+            } catch (Exception e) {
+                project.logger.error("[useAar - Post-Processing] Fallback: Failed to resolve 'implementation': ${e.message}")
             }
         }
     }
+    project.logger.lifecycle("[useAar - Post-Processing] Finished attempt to resolve configurations.")
 }
 
-static String createMetadataStr(String groupId, String artifactId, String version) {
-    return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<metadata>\n" +
-            "  <groupId>$groupId</groupId>\n" +
-            "  <artifactId>$artifactId</artifactId>\n" +
-            "  <versioning>\n" +
-            "    <release>$version</release>\n" +
-            "    <versions>\n" +
-            "      <version>$version</version>\n" +
-            "    </versions>\n" +
-            "    <lastUpdated>${new Date().format('yyyyMMdd')}000000</lastUpdated>\n" +
-            "  </versioning>\n" +
-            "</metadata>\n"
-}
-
+// Helper function to create POM content
 static String createPomStr(String groupId, String artifactId, String version) {
-    return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<project xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\" xmlns=\"http://maven.apache.org/POM/4.0.0\"\n" +
-            "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" +
-            "  <modelVersion>4.0.0</modelVersion>\n" +
-            "  <groupId>$groupId</groupId>\n" +
-            "  <artifactId>$artifactId</artifactId>\n" +
-            "  <version>$version</version>\n" +
-            "  <packaging>aar</packaging>\n" +
-            "</project>\n"
+    return """<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>${groupId}</groupId>
+  <artifactId>${artifactId}</artifactId>
+  <version>${version}</version>
+  <packaging>aar</packaging>
+</project>
+"""
 }
 
-static String getFileSha1(File file) {
-    FileInputStream input = null;
-    try {
-        input = new FileInputStream(file);
-        MessageDigest digest = MessageDigest.getInstance("SHA-1");
-        byte[] buffer = new byte[1024 * 1024 * 10];
+// Helper function to create Maven metadata content (simplified)
+static String createMetadataStr(String groupId, String artifactId, String version) {
+    // Groovy's Date().format() is different from Java's SimpleDateFormat.
+    // For yyyyMMddHHmmss, you might need TimeCategory or SimpleDateFormat.
+    // Using a simpler timestamp for now.
+    String timestamp = new Date().format('yyyyMMddHHmmss', TimeZone.getTimeZone('UTC'))
+    return """<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>${groupId}</groupId>
+  <artifactId>${artifactId}</artifactId>
+  <versioning>
+    <latest>${version}</latest>
+    <release>${version}</release>
+    <versions>
+      <version>${version}</version>
+    </versions>
+    <lastUpdated>${timestamp}</lastUpdated>
+  </versioning>
+</metadata>
+"""
+}
 
-        int len = 0;
+// Helper function to calculate SHA1 checksum
+static String getFileSha1(File file) {
+    try (FileInputStream input = new FileInputStream(file)) {
+        MessageDigest digest = MessageDigest.getInstance("SHA-1");
+        byte[] buffer = new byte[8192]; // 8KB buffer
+
+        int len;
         while ((len = input.read(buffer)) > 0) {
             digest.update(buffer, 0, len);
         }
         String sha1 = new BigInteger(1, digest.digest()).toString(16);
-        int length = 40 - sha1.length();
-        if (length > 0) {
-            for (int i = 0; i < length; i++) {
-                sha1 = "0" + sha1;
-            }
+        // Pad with leading zeros to ensure 40 characters
+        while (sha1.length() < 40) {
+            sha1 = "0" + sha1;
         }
         return sha1;
-    }
-    catch (IOException e) {
-        System.out.println(e);
-    }
-    catch (NoSuchAlgorithmException e) {
-        System.out.println(e);
-    }
-    finally {
-        try {
-            if (input != null) {
-                input.close();
-            }
-        }
-        catch (IOException e) {
-            System.out.println(e);
-        }
+    } catch (IOException | NoSuchAlgorithmException e) {
+        System.err.println("Error calculating SHA1 for " + file.getName() + ": " + e.getMessage());
+        return ""; // Return empty or throw exception
     }
 }
 
+// Helper function to calculate MD5 checksum
 static String getFileMD5(File file) {
-    FileInputStream input = null;
-    try {
-        input = new FileInputStream(file);
+    try (FileInputStream input = new FileInputStream(file)) {
         MessageDigest digest = MessageDigest.getInstance("MD5");
-        byte[] buffer = new byte[1024 * 1024 * 10];
+        byte[] buffer = new byte[8192]; // 8KB buffer
 
-        int len = 0;
+        int len;
         while ((len = input.read(buffer)) > 0) {
             digest.update(buffer, 0, len);
         }
         String md5 = new BigInteger(1, digest.digest()).toString(16);
-        int length = 32 - md5.length();
-        if (length > 0) {
-            for (int i = 0; i < length; i++) {
-                md5 = "0" + md5;
-            }
+        // Pad with leading zeros to ensure 32 characters
+        while (md5.length() < 32) {
+            md5 = "0" + md5;
         }
         return md5;
-    }
-    catch (IOException e) {
-        System.out.println(e);
-    }
-    catch (NoSuchAlgorithmException e) {
-        System.out.println(e);
-    }
-    finally {
-        try {
-            if (input != null) {
-                input.close();
-            }
-        }
-        catch (IOException e) {
-            System.out.println(e);
-        }
+    } catch (IOException | NoSuchAlgorithmException e) {
+        System.err.println("Error calculating MD5 for " + file.getName() + ": " + e.getMessage());
+        return ""; // Return empty or throw exception
     }
 }
 
-
+// Ensure preBuild depends on useAar, and useAar depends on setupDependencies.
+// This establishes the correct execution order.
 preBuild.dependsOn setupDependencies
 useAar.dependsOn setupDependencies
-preBuild.dependsOn useAar
+preBuild.dependsOn useAar // useAar already has "dependsOn setupDependencies"
+// If preBuild is not automatically part of the build, you might need to hook into other tasks.
+// For example, tasks.withType(JavaCompile) { dependsOn useAar }
+// However, preBuild is usually a good hook.
+
+// It's good practice to ensure clean task also cleans the localMaven repo
+tasks.named('clean', Delete) {
+    delete localMavenPath // Clean the localMaven directory
+    delete project.file("libs")
+    // Optionally clean the libs directory if setupDependencies repopulates it
+}
+

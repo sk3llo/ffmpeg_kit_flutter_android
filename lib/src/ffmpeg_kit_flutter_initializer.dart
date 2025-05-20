@@ -42,8 +42,9 @@ import 'ffmpeg_kit_factory.dart';
 
 class FFmpegKitInitializer {
   static final FFmpegKitPlatform _platform = FFmpegKitPlatform.instance;
-  static const EventChannel _eventChannel =
-      EventChannel('flutter.arthenica.com/ffmpeg_kit_event');
+  static const EventChannel _eventChannel = EventChannel(
+    'flutter.arthenica.com/ffmpeg_kit_event',
+  );
 
   static final FFmpegKitInitializer _instance = FFmpegKitInitializer();
 
@@ -105,7 +106,7 @@ class FFmpegKitInitializer {
 
     activeLogRedirectionStrategy =
         FFmpegKitFactory.getLogRedirectionStrategy(sessionId) ??
-            activeLogRedirectionStrategy;
+        activeLogRedirectionStrategy;
     final LogCallback? logCallback = FFmpegKitFactory.getLogCallback(sessionId);
 
     if (logCallback != null) {
@@ -223,7 +224,9 @@ class FFmpegKitInitializer {
               // NOTIFY SESSION CALLBACK DEFINED
               completeCallback(ffmpegSession);
             } on Exception catch (e, stack) {
-              debugPrint("Exception thrown inside session complete callback. $e");
+              debugPrint(
+                "Exception thrown inside session complete callback. $e",
+              );
               debugPrint(stack.toString());
             }
           }
@@ -235,7 +238,9 @@ class FFmpegKitInitializer {
               // NOTIFY GLOBAL CALLBACK DEFINED
               globalFFmpegSessionCompleteCallback(ffmpegSession);
             } on Exception catch (e, stack) {
-              debugPrint("Exception thrown inside global complete callback. $e");
+              debugPrint(
+                "Exception thrown inside global complete callback. $e",
+              );
               debugPrint(stack.toString());
             }
           }
@@ -249,7 +254,9 @@ class FFmpegKitInitializer {
               // NOTIFY SESSION CALLBACK DEFINED
               completeCallback(ffprobeSession);
             } on Exception catch (e, stack) {
-              debugPrint("Exception thrown inside session complete callback. $e");
+              debugPrint(
+                "Exception thrown inside session complete callback. $e",
+              );
               debugPrint(stack.toString());
             }
           }
@@ -261,7 +268,9 @@ class FFmpegKitInitializer {
               // NOTIFY GLOBAL CALLBACK DEFINED
               globalFFprobeSessionCompleteCallback(ffprobeSession);
             } on Exception catch (e, stack) {
-              debugPrint("Exception thrown inside global complete callback. $e");
+              debugPrint(
+                "Exception thrown inside global complete callback. $e",
+              );
               debugPrint(stack.toString());
             }
           }
@@ -275,20 +284,25 @@ class FFmpegKitInitializer {
               // NOTIFY SESSION CALLBACK DEFINED
               completeCallback(mediaInformationSession);
             } on Exception catch (e, stack) {
-              debugPrint("Exception thrown inside session complete callback. $e");
+              debugPrint(
+                "Exception thrown inside session complete callback. $e",
+              );
               debugPrint(stack.toString());
             }
           }
 
-          final globalMediaInformationSessionCompleteCallback = FFmpegKitFactory
-              .getGlobalMediaInformationSessionCompleteCallback();
+          final globalMediaInformationSessionCompleteCallback =
+              FFmpegKitFactory.getGlobalMediaInformationSessionCompleteCallback();
           if (globalMediaInformationSessionCompleteCallback != null) {
             try {
               // NOTIFY GLOBAL CALLBACK DEFINED
               globalMediaInformationSessionCompleteCallback(
-                  mediaInformationSession);
+                mediaInformationSession,
+              );
             } on Exception catch (e, stack) {
-              debugPrint("Exception thrown inside global complete callback. $e");
+              debugPrint(
+                "Exception thrown inside global complete callback. $e",
+              );
               debugPrint(stack.toString());
             }
           }
@@ -302,11 +316,6 @@ class FFmpegKitInitializer {
       // const MethodChannel _channel =
       // const MethodChannel('flutter.arthenica.com/ffmpeg_kit');
       // return await _channel.invokeMethod<int>('getLogLevel');
-
-
-
-
-
 
       return _platform.ffmpegKitFlutterInitializerGetLogLevel();
     } on PlatformException catch (e, stack) {

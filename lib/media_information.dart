@@ -42,8 +42,7 @@ class MediaInformation {
       getStringFormatProperty(MediaInformation.keyFilename);
 
   /// Returns format.
-  String? getFormat() =>
-      getStringFormatProperty(MediaInformation.keyFormat);
+  String? getFormat() => getStringFormatProperty(MediaInformation.keyFormat);
 
   /// Returns long format.
   String? getLongFormat() =>
@@ -61,8 +60,7 @@ class MediaInformation {
   String? getSize() => getStringFormatProperty(MediaInformation.keySize);
 
   /// Returns bitrate.
-  String? getBitrate() =>
-      getStringFormatProperty(MediaInformation.keyBitRate);
+  String? getBitrate() => getStringFormatProperty(MediaInformation.keyBitRate);
 
   /// Returns all tags.
   Map<dynamic, dynamic>? getTags() =>
@@ -78,8 +76,7 @@ class MediaInformation {
   dynamic getProperty(String key) => getAllProperties()?[key];
 
   /// Returns the format property associated with the key.
-  String? getStringFormatProperty(String key) =>
-      getFormatProperties()?[key];
+  String? getStringFormatProperty(String key) => getFormatProperties()?[key];
 
   /// Returns the format property associated with the key.
   num? getNumberFormatProperty(String key) => getFormatProperties()?[key];
@@ -89,8 +86,9 @@ class MediaInformation {
 
   /// Returns all streams found as a list.
   List<StreamInformation> getStreams() {
-    final List<StreamInformation> list =
-        List<StreamInformation>.empty(growable: true);
+    final List<StreamInformation> list = List<StreamInformation>.empty(
+      growable: true,
+    );
 
     dynamic createStreamInformation(Map<dynamic, dynamic> streamProperties) =>
         list.add(StreamInformation(streamProperties));
