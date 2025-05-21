@@ -1,3 +1,8 @@
+## 1.4.0
+
+* Removed manual packaging of prebuilt dependencies for Android
+* Removed unnecessary logs
+
 ## 1.3.0
 
 * New seamless Android .aar support

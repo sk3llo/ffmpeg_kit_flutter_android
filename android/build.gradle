@@ -16,7 +16,7 @@ buildscript {
 }
 
 // Ensure unique path for local Maven repo
-String localMavenPath = project.mkdir("libs").absolutePath
+String localMavenPath = project.mkdir("${project.buildDir}/localMaven").absolutePath
 
 rootProject.allprojects {
     repositories {
@@ -24,7 +24,7 @@ rootProject.allprojects {
         mavenCentral()
         maven { url "file://$localMavenPath" }
         flatDir {
-            dirs localMavenPath
+            dirs 'libs'
         }
     }
 }
@@ -76,7 +76,7 @@ dependencies {
     implementation("androidx.annotation:annotation:1.9.1")
     implementation('com.arthenica:smart-exception-java:0.2.1')
     implementation('com.arthenica:smart-exception-common:0.2.1')
-    implementation(name: 'com.arthenica.ffmpegkit-flutter-6.0', ext: 'aar')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 String aarPath = localMavenPath // Use the same variable as defined above
@@ -309,23 +309,15 @@ static String getFileMD5(File file) {
         return md5;
     } catch (IOException | NoSuchAlgorithmException e) {
         System.err.println("Error calculating MD5 for " + file.getName() + ": " + e.getMessage());
-        return ""; // Return empty or throw exception
+        return "";
     }
 }
 
-// Ensure preBuild depends on useAar, and useAar depends on setupDependencies.
-// This establishes the correct execution order.
 preBuild.dependsOn setupDependencies
 useAar.dependsOn setupDependencies
-preBuild.dependsOn useAar // useAar already has "dependsOn setupDependencies"
-// If preBuild is not automatically part of the build, you might need to hook into other tasks.
-// For example, tasks.withType(JavaCompile) { dependsOn useAar }
-// However, preBuild is usually a good hook.
+preBuild.dependsOn useAar
 
-// It's good practice to ensure clean task also cleans the localMaven repo
 tasks.named('clean', Delete) {
-    delete localMavenPath // Clean the localMaven directory
+    delete localMavenPath
     delete project.file("libs")
-    // Optionally clean the libs directory if setupDependencies repopulates it
 }
-
