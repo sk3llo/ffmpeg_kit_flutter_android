@@ -23,5 +23,5 @@ flutter:
   plugin:
     platforms:
       android:
-        package: com.arthenica.ffmpegkit.flutter
+        package: com.arthenica.ffmpegkit
         pluginClass: FFmpegKitFlutterPlugin
