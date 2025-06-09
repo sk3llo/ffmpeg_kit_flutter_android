@@ -1,3 +1,8 @@
+## 1.5.0
+
+- Added support for Google [16 KB page sizes requirement](https://developer.android.com/guide/practices/page-sizes)
+- Upgraded local `ffmpeg` libs for arm64-v8a to their latest versions
+
 ## 1.4.0
 
 * Removed manual packaging of prebuilt dependencies for Android
