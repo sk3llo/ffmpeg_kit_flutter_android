@@ -1,3 +1,8 @@
+## 1.6.0
+
+* Added support for Google [16 KB page sizes requirement](https://developer.android.com/guide/practices/page-sizes)
+* Upgraded all `ffmpeg` libs to their latest versions
+
 ## 1.5.0
 
 * Merged fix for .aar post processing
