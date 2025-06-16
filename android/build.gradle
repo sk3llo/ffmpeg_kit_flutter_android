@@ -188,47 +188,50 @@ task useAar {
         variants = android.applicationVariants
     } else if (android.hasProperty("libraryVariants")) { // For Android libraries
         variants = android.libraryVariants
-    }
+    } 
+    if (variants != null) {
+        if (variants.isEmpty()) {
+            // Use afterEvaluate to ensure variants are available
+            project.afterEvaluate {
+                def lateVariants = android.hasProperty("libraryVariants") ? android.libraryVariants : android.applicationVariants
+                if (lateVariants && !lateVariants.isEmpty()) {
+                    lateVariants.all { variant ->    
+                        // The configuration name for compile classpath is typically <variantName>CompileClasspath
+                        // e.g., "debugCompileClasspath", "releaseCompileClasspath"
+                        String compileClasspathConfigName = variant.name + "CompileClasspath"
+                        def config = project.configurations.findByName(compileClasspathConfigName)
 
-    if (variants != null && !variants.isEmpty()) {
-        variants.all { variant ->
-            // The configuration name for compile classpath is typically <variantName>CompileClasspath
-            // e.g., "debugCompileClasspath", "releaseCompileClasspath"
-            String compileClasspathConfigName = variant.name + "CompileClasspath"
-            def config = project.configurations.findByName(compileClasspathConfigName)
-
-            if (config) {
-                project.logger.lifecycle("[useAar - Post-Processing] Resolving '${config.name}' for variant '${variant.name}'...")
-                try {
-                    // Resolve the configuration. This forces Gradle to process the newly added
-                    // dependencies from the local Maven repository for this specific variant's compile classpath.
-                    config.resolve()
-                    project.logger.lifecycle("[useAar - Post-Processing] Successfully resolved '${config.name}'. Artifacts found:")
-                    config.resolvedConfiguration.getResolvedArtifacts().each { artifact ->
-                        project.logger.lifecycle("  -> ${artifact.moduleVersion.id} (File: ${artifact.file.name})")
+                        if (config) {
+                            project.logger.lifecycle("[useAar - Post-Processing] Resolving '${config.name}' for variant '${variant.name}'...")
+                            try {
+                                // Resolve the configuration. This forces Gradle to process the newly added
+                                // dependencies from the local Maven repository for this specific variant's compile classpath.
+                                config.resolve()
+                                project.logger.lifecycle("[useAar - Post-Processing] Successfully resolved '${config.name}'. Artifacts found:")
+                                config.resolvedConfiguration.getResolvedArtifacts().each { artifact ->
+                                    project.logger.lifecycle("  -> ${artifact.moduleVersion.id} (File: ${artifact.file.name})")
+                                }
+                            } catch (Exception e) {
+                                // Log error but continue, as other variants might resolve.
+                                project.logger.error("[useAar - Post-Processing] Failed to resolve '${config.name}' for variant '${variant.name}': ${e.message}")
+                                // For more detailed error: project.logger.error("Stack trace:", e)
+                            }
+                        } else {
+                            project.logger.warn("[useAar - Post-Processing] Compile classpath configuration '${compileClasspathConfigName}' not found for variant '${variant.name}'.")
+                        }
                     }
-                } catch (Exception e) {
-                    // Log error but continue, as other variants might resolve.
-                    project.logger.error("[useAar - Post-Processing] Failed to resolve '${config.name}' for variant '${variant.name}': ${e.message}")
-                    // For more detailed error: project.logger.error("Stack trace:", e)
+                } else {
+                    resolveFallbackConfigurations(project)
                 }
-            } else {
-                project.logger.warn("[useAar - Post-Processing] Compile classpath configuration '${compileClasspathConfigName}' not found for variant '${variant.name}'.")
+            }
+        } else {
+            // Variants are available, process them normally
+            variants.all { variant ->
+                resolveVariantConfigurations(project, variant)
             }
         }
     } else {
-        project.logger.warn("[useAar - Post-Processing] Could not determine Android variants or no variants found. Skipping variant-specific classpath resolution.")
-        // Fallback: try to resolve 'implementation' if variant detection fails or is not applicable
-        def implConfig = project.configurations.findByName("implementation")
-        if (implConfig) {
-            project.logger.lifecycle("[useAar - Post-Processing] Fallback: Resolving 'implementation' configuration...")
-            try {
-                implConfig.resolve()
-                project.logger.lifecycle("[useAar - Post-Processing] Successfully resolved 'implementation' configuration.")
-            } catch (Exception e) {
-                project.logger.error("[useAar - Post-Processing] Fallback: Failed to resolve 'implementation': ${e.message}")
-            }
-        }
+        resolveFallbackConfigurations(project)
     }
     project.logger.lifecycle("[useAar - Post-Processing] Finished attempt to resolve configurations.")
 }
