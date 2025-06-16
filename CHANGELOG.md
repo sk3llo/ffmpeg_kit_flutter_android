@@ -1,3 +1,7 @@
+## 1.5.0
+
+* Merged fix for .aar post processing
+
 ## 1.4.0
 
 * Removed manual packaging of prebuilt dependencies for Android
