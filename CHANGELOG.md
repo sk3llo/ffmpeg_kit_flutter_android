@@ -1,3 +1,7 @@
+## 1.7.0
+
+* Updated all FFMpeg Android bindings from 6.0.2 to 7.0.0
+
 ## 1.6.0
 
 * Added support for Google [16 KB page sizes requirement](https://developer.android.com/guide/practices/page-sizes)

@@ -68,7 +68,7 @@ android {
         } else {
             commandLine 'sh', '-c', 'chmod +x ../scripts/setup_android.sh && ../scripts/setup_android.sh'
         }
-        onlyIf { !file('libs/com.arthenica.ffmpegkit-flutter-6.0.aar').exists() }
+        onlyIf { !file('libs/com.arthenica.ffmpegkit-flutter-7.0.aar').exists() }
     }
 }
 
