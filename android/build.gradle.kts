@@ -14,7 +14,7 @@ kotlin {
 
 // Publishing [com.vanniktech.maven.publish] config
 mavenPublishing {
-    coordinates("com.antonkarpenko", "ffmpeg-kit-audio", "1.0.0")
+    coordinates("com.antonkarpenko", "ffmpeg-kit-audio", "1.0.1")
 
     pom {
         name.set("FFmpeg v7.1.1 Audio")
@@ -52,7 +52,7 @@ mavenPublishing {
 android {
     namespace = "com.antonkarpenko"
     compileSdk = 36
-    version = "1.0.0"
+    version = "1.0.1"
 
     defaultConfig {
         minSdk = 24
