@@ -14,11 +14,11 @@ kotlin {
 
 // Publishing [com.vanniktech.maven.publish] config
 mavenPublishing {
-    coordinates("com.antonkarpenko", "ffmpeg-kit-https", "1.0.0")
+    coordinates("com.antonkarpenko", "ffmpeg-kit-https-gpl", "1.0.0")
 
     pom {
-        name.set("FFmpeg v7.1.1 HTTPS")
-        description.set("FFmpeg v7.1.1 HTTPS")
+        name.set("FFmpeg v7.1.1 HTTPS-GPL")
+        description.set("FFmpeg v7.1.1 HTTPS-GPL")
         inceptionYear.set("2025")
         url.set("https://github.com/sk3llo/ffmpeg-kit-flutter")
         licenses {
