@@ -17,8 +17,8 @@ mavenPublishing {
     coordinates("com.antonkarpenko", "ffmpeg-kit-https", "1.0.0")
 
     pom {
-        name.set("FFmpeg v7.1.1 Full GPL")
-        description.set("FFmpeg v7.1.1 Full GPL")
+        name.set("FFmpeg v7.1.1 HTTPS")
+        description.set("FFmpeg v7.1.1 HTTPS")
         inceptionYear.set("2025")
         url.set("https://github.com/sk3llo/ffmpeg-kit-flutter")
         licenses {
