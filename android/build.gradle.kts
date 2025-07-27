@@ -14,11 +14,11 @@ kotlin {
 
 // Publishing [com.vanniktech.maven.publish] config
 mavenPublishing {
-    coordinates("com.antonkarpenko", "ffmpeg-kit-min", "1.0.1")
+    coordinates("com.antonkarpenko", "ffmpeg-kit-https", "1.0.0")
 
     pom {
-        name.set("FFmpeg v7.1.1 Min")
-        description.set("FFmpeg v7.1.1 Min")
+        name.set("FFmpeg v7.1.1 Full GPL")
+        description.set("FFmpeg v7.1.1 Full GPL")
         inceptionYear.set("2025")
         url.set("https://github.com/sk3llo/ffmpeg-kit-flutter")
         licenses {
@@ -26,6 +26,12 @@ mavenPublishing {
                 name.set("LGPL 3.0")
                 url.set("https://www.gnu.org/licenses/lgpl-3.0.en.html")
                 distribution.set("https://www.gnu.org/licenses/lgpl-3.0.en.html")
+            }
+            // GPL License
+            license {
+                name.set("GPL 3.0")
+                url.set("https://www.gnu.org/licenses/gpl-3.0.en.html")
+                distribution.set("https://www.gnu.org/licenses/gpl-3.0.en.html")
             }
         }
         developers {
@@ -46,7 +52,7 @@ mavenPublishing {
 android {
     namespace = "com.antonkarpenko"
     compileSdk = 36
-    version = "1.0.1"
+    version = "1.0.0"
 
     defaultConfig {
         minSdk = 24
