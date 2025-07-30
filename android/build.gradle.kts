@@ -1,6 +1,6 @@
 plugins {
     id("com.android.library") version "8.11.1"
-    id("org.jetbrains.kotlin.android") version "2.2.0"
+    id("org.jetbrains.kotlin.android") version "1.8.22"
     id("maven-publish")
     id("signing")
     id("com.vanniktech.maven.publish") version "0.34.0"
@@ -14,7 +14,7 @@ kotlin {
 
 // Publishing [com.vanniktech.maven.publish] config
 mavenPublishing {
-    coordinates("com.antonkarpenko", "ffmpeg-kit-min", "1.0.1")
+    coordinates("com.antonkarpenko", "ffmpeg-kit-min", "1.0.2")
 
     pom {
         name.set("FFmpeg v7.1.1 Min")
@@ -46,7 +46,7 @@ mavenPublishing {
 android {
     namespace = "com.antonkarpenko"
     compileSdk = 36
-    version = "1.0.1"
+    version = "1.0.2"
 
     defaultConfig {
         minSdk = 24
