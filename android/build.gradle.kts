@@ -8,11 +8,11 @@ plugins {
 
 // Publishing [com.vanniktech.maven.publish] config
 mavenPublishing {
-    coordinates("com.antonkarpenko", "ffmpeg-kit-video", "1.0.0")
+    coordinates("com.antonkarpenko", "ffmpeg-kit-full", "1.0.0")
 
     pom {
-        name.set("FFmpeg v7.1.1 Video")
-        description.set("FFmpeg v7.1.1 Video")
+        name.set("FFmpeg v7.1.1 Full")
+        description.set("FFmpeg v7.1.1 Full")
         inceptionYear.set("2025")
         url.set("https://github.com/sk3llo/ffmpeg-kit-flutter")
         licenses {
