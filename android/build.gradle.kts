@@ -6,12 +6,6 @@ plugins {
     id("com.vanniktech.maven.publish") version "0.34.0"
 }
 
-kotlin {
-    compilerOptions {
-        optIn.add("kotlin.RequiresOptIn")
-    }
-}
-
 // Publishing [com.vanniktech.maven.publish] config
 mavenPublishing {
     coordinates("com.antonkarpenko", "ffmpeg-kit-min", "1.0.2")
