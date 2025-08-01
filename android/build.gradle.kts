@@ -8,7 +8,7 @@ plugins {
 
 // Publishing [com.vanniktech.maven.publish] config
 mavenPublishing {
-    coordinates("com.antonkarpenko", "ffmpeg-kit-min", "1.0.2")
+    coordinates("com.antonkarpenko", "ffmpeg-kit-min", "1.0.3")
 
     pom {
         name.set("FFmpeg v7.1.1 Min")
@@ -40,7 +40,7 @@ mavenPublishing {
 android {
     namespace = "com.antonkarpenko"
     compileSdk = 36
-    version = "1.0.2"
+    version = "1.0.3"
 
     defaultConfig {
         minSdk = 24

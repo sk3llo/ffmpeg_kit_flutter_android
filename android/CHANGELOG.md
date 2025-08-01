@@ -1,3 +1,7 @@
+## 1.0.3
+
+* Updated jniLibs
+
 ## 1.0.2
 
 * Downgraded Kotlin from v2.2.0 to v1.8.22
