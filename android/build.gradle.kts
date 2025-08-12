@@ -1,24 +1,18 @@
 plugins {
-    id("com.android.library") version "8.11.1"
-    id("org.jetbrains.kotlin.android") version "2.2.0"
+    id("com.android.library") version "8.12.0"
+    id("org.jetbrains.kotlin.android") version "1.8.22"
     id("maven-publish")
     id("signing")
     id("com.vanniktech.maven.publish") version "0.34.0"
 }
 
-kotlin {
-    compilerOptions {
-        optIn.add("kotlin.RequiresOptIn")
-    }
-}
-
 // Publishing [com.vanniktech.maven.publish] config
 mavenPublishing {
-    coordinates("com.antonkarpenko", "ffmpeg-kit-min", "1.0.1")
+    coordinates("com.antonkarpenko", "ffmpeg-kit-min-gpl", "1.1.0")
 
     pom {
-        name.set("FFmpeg v7.1.1 Min")
-        description.set("FFmpeg v7.1.1 Min")
+        name.set("FFmpeg v7.1.1 Min-GPL")
+        description.set("FFmpeg v7.1.1 Min-GPL")
         inceptionYear.set("2025")
         url.set("https://github.com/sk3llo/ffmpeg-kit-flutter")
         licenses {
@@ -26,6 +20,11 @@ mavenPublishing {
                 name.set("LGPL 3.0")
                 url.set("https://www.gnu.org/licenses/lgpl-3.0.en.html")
                 distribution.set("https://www.gnu.org/licenses/lgpl-3.0.en.html")
+            }
+            license {
+                name.set("GPL 3.0")
+                url.set("https://www.gnu.org/licenses/gpl-3.0.en.html")
+                distribution.set("https://www.gnu.org/licenses/gpl-3.0.en.html")
             }
         }
         developers {
@@ -46,12 +45,21 @@ mavenPublishing {
 android {
     namespace = "com.antonkarpenko"
     compileSdk = 36
-    version = "1.0.1"
+    version = "1.1.0"
 
     defaultConfig {
         minSdk = 24
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+    }
+
+    buildTypes {
+        release {
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
     }
 
     compileOptions {
