@@ -14,7 +14,7 @@ kotlin {
 
 // Publishing [com.vanniktech.maven.publish] config
 mavenPublishing {
-    coordinates("com.antonkarpenko", "ffmpeg-kit-https-gpl", "1.0.0")
+    coordinates("com.antonkarpenko", "ffmpeg-kit-https-gpl", "1.1.0")
 
     pom {
         name.set("FFmpeg v7.1.1 HTTPS-GPL")
@@ -52,7 +52,7 @@ mavenPublishing {
 android {
     namespace = "com.antonkarpenko"
     compileSdk = 36
-    version = "1.0.0"
+    version = "1.1.0"
 
     defaultConfig {
         minSdk = 24
