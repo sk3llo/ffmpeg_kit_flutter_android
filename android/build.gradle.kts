@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library") version "8.11.1"
+    id("com.android.library") version "8.12.3"
     id("org.jetbrains.kotlin.android") version "1.8.22"
     id("maven-publish")
     id("signing")
@@ -8,11 +8,11 @@ plugins {
 
 // Publishing [com.vanniktech.maven.publish] config
 mavenPublishing {
-    coordinates("com.antonkarpenko", "ffmpeg-kit-full-gpl", "1.1.0")
+    coordinates("com.antonkarpenko", "ffmpeg-kit-full-gpl", "2.0.1")
 
     pom {
-        name.set("FFmpeg v7.1.1 Full-GPL")
-        description.set("FFmpeg v7.1.1 Full-GPL")
+        name.set("FFmpeg v8.0.0 Full-GPL")
+        description.set("FFmpeg v8.0.0 Full-GPL")
         inceptionYear.set("2025")
         url.set("https://github.com/sk3llo/ffmpeg-kit-flutter")
         licenses {
@@ -46,7 +46,7 @@ mavenPublishing {
 android {
     namespace = "com.antonkarpenko"
     compileSdk = 36
-    version = "1.1.0"
+    version = "2.0.1"
 
     defaultConfig {
         minSdk = 24
@@ -57,6 +57,15 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    buildTypes {
+        release {
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
     }
 }
 

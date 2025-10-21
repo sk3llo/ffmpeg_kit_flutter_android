@@ -1,3 +1,13 @@
+## 2.0.1
+
+* Added missing includes: <stddef.h> and "libavutil_file.h"
+* Fixed uncommenting the SAF protocol injection: ~/scripts/android/ffmpeg.sh
+
+## 2.0.0
+
+* Initial FFmpeg 8.0 release
+* Added proguard-rules.pro
+
 ## 1.1.0
 
 # UPGRADED LIBS AND SCRIPTS:
