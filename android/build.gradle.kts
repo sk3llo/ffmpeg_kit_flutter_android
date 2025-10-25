@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library") version "8.12.0"
+    id("com.android.library") version "8.12.3"
     id("org.jetbrains.kotlin.android") version "1.8.22"
     id("maven-publish")
     id("signing")
@@ -8,11 +8,11 @@ plugins {
 
 // Publishing [com.vanniktech.maven.publish] config
 mavenPublishing {
-    coordinates("com.antonkarpenko", "ffmpeg-kit-min-gpl", "1.1.0")
+    coordinates("com.antonkarpenko", "ffmpeg-kit-min-gpl", "2.0.0")
 
     pom {
-        name.set("FFmpeg v7.1.1 Min-GPL")
-        description.set("FFmpeg v7.1.1 Min-GPL")
+        name.set("FFmpeg v8.0.0 Min-GPL")
+        description.set("FFmpeg v8.0.0 Min-GPL")
         inceptionYear.set("2025")
         url.set("https://github.com/sk3llo/ffmpeg-kit-flutter")
         licenses {
@@ -45,7 +45,7 @@ mavenPublishing {
 android {
     namespace = "com.antonkarpenko"
     compileSdk = 36
-    version = "1.1.0"
+    version = "2.0.0"
 
     defaultConfig {
         minSdk = 24
