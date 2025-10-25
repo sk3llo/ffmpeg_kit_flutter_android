@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library") version "8.11.1"
+    id("com.android.library") version "8.12.3"
     id("org.jetbrains.kotlin.android") version "1.8.22"
     id("maven-publish")
     id("signing")
@@ -8,11 +8,11 @@ plugins {
 
 // Publishing [com.vanniktech.maven.publish] config
 mavenPublishing {
-    coordinates("com.antonkarpenko", "ffmpeg-kit-audio", "1.1.0")
+    coordinates("com.antonkarpenko", "ffmpeg-kit-audio", "2.0.0")
 
     pom {
-        name.set("FFmpeg v7.1.1 Audio")
-        description.set("FFmpeg v7.1.1 Audio")
+        name.set("FFmpeg v8.0.0 Audio")
+        description.set("FFmpeg v8.0.0 Audio")
         inceptionYear.set("2025")
         url.set("https://github.com/sk3llo/ffmpeg-kit-flutter")
         licenses {
@@ -46,12 +46,21 @@ mavenPublishing {
 android {
     namespace = "com.antonkarpenko"
     compileSdk = 36
-    version = "1.1.0"
+    version = "2.0.0"
 
     defaultConfig {
         minSdk = 24
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+    }
+
+    buildTypes {
+        release {
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
     }
 
     compileOptions {
