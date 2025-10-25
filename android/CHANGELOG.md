@@ -1,3 +1,8 @@
+## 2.0.0
+
+* Initial FFmpeg 8.0 release
+* Added proguard-rules.pro
+
 ## 1.1.0
 
 * Added proguard-rules.pro to keep `ffmpeg` dependencies when minification is enabled
