@@ -8,7 +8,7 @@ plugins {
 
 // Publishing [com.vanniktech.maven.publish] config
 mavenPublishing {
-    coordinates("com.antonkarpenko", "ffmpeg-kit-full-gpl", "2.0.1")
+    coordinates("com.antonkarpenko", "ffmpeg-kit-full-gpl", "2.1.0")
 
     pom {
         name.set("FFmpeg v8.0.0 Full-GPL")
@@ -46,7 +46,7 @@ mavenPublishing {
 android {
     namespace = "com.antonkarpenko"
     compileSdk = 36
-    version = "2.0.1"
+    version = "2.1.0"
 
     defaultConfig {
         minSdk = 24
