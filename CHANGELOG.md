@@ -1,3 +1,8 @@
+## 1.6.0
+
+* FFmpeg **8.1.1**: bundled Android native libraries updated to FFmpeg 8.1.1.
+* Maven artifact `com.antonkarpenko:ffmpeg-kit-*` bumped to `2.2.0`.
+
 ## 1.5.0
 
 - Added support for Google [16 KB page sizes requirement](https://developer.android.com/guide/practices/page-sizes)
