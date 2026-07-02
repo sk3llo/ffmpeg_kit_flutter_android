@@ -8,11 +8,16 @@ plugins {
 
 // Publishing [com.vanniktech.maven.publish] config
 mavenPublishing {
+    // Target the Central Portal (central.sonatype.com) and sign every publication.
+    // Without these the plugin registers no publishToMavenCentral task at all.
+    publishToMavenCentral()
+    signAllPublications()
+
     coordinates("com.antonkarpenko", "ffmpeg-kit-min", "2.2.0")
 
     pom {
-        name.set("FFmpeg v8.0.0 Min")
-        description.set("FFmpeg v8.0.0 Min")
+        name.set("FFmpeg v8.1.1 Min")
+        description.set("FFmpeg v8.1.1 Min")
         inceptionYear.set("2025")
         url.set("https://github.com/sk3llo/ffmpeg-kit-flutter")
         licenses {
@@ -94,10 +99,13 @@ signing {
     val signingKey = providers.gradleProperty("signing.key")
     val signingPassword = providers.gradleProperty("signing.password")
 
-    val shouldSign = signingKey.isPresent && signingPassword.isPresent
-
-    if (shouldSign) {
+    if (signingKey.isPresent && signingPassword.isPresent) {
         useInMemoryPgpKeys(signingKey.get(), signingPassword.get())
         sign(publishing.publications)
+    } else {
+        // Delegate to the local `gpg` binary (signing.gnupg.* properties).
+        // GnuPG 2.4 key exports are unreadable by Gradle's BouncyCastle
+        // ("PGPException: checksum mismatch") even with the right passphrase.
+        useGpgCmd()
     }
 }
