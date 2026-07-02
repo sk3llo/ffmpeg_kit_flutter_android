@@ -1,0 +1,34 @@
+name: publish-central
+# Relay a locally-built, signed Maven Central bundle to the Central Portal.
+# Why: the Portal's edge times out uploads after ~5 minutes; slow residential
+# uplinks cannot push the ~110MB ffmpeg-kit bundles directly. GitHub runners can.
+# Usage: attach the bundle zip to a release, then dispatch with its tag.
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag holding the signed Central bundle zip"
+        required: true
+        default: "central-bundle-2.2.0"
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Download bundle from release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download "${{ inputs.release_tag }}" --repo "${{ github.repository }}" --pattern '*.zip' -O bundle.zip
+          ls -la bundle.zip
+      - name: Upload to Central Portal (staged / USER_MANAGED)
+        run: |
+          code=$(curl -s -o resp.txt -w "%{http_code}" \
+            -X POST "https://central.sonatype.com/api/v1/publisher/upload?publishingType=USER_MANAGED" \
+            -H "Authorization: Bearer ${{ secrets.CENTRAL_TOKEN }}" \
+            -F "bundle=@bundle.zip")
+          echo "HTTP $code"
+          echo "deploymentId/response:"
+          cat resp.txt; echo
+          [ "$code" = "201" ]
