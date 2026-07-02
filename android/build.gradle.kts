@@ -8,11 +8,18 @@ plugins {
 
 // Publishing [com.vanniktech.maven.publish] config
 mavenPublishing {
+    // Target the Central Portal (central.sonatype.com) and sign every publication.
+    // Without these the plugin registers no publishToMavenCentral task at all.
+    // Signing reads the standard gradle properties (signing.keyId / signing.password /
+    // signing.secretKeyRingFile) from ~/.gradle/gradle.properties.
+    publishToMavenCentral()
+    signAllPublications()
+
     coordinates("com.antonkarpenko", "ffmpeg-kit-full-gpl", "2.2.0")
 
     pom {
-        name.set("FFmpeg v8.0.0 Full-GPL")
-        description.set("FFmpeg v8.0.0 Full-GPL")
+        name.set("FFmpeg v8.1.1 Full-GPL")
+        description.set("FFmpeg v8.1.1 Full-GPL")
         inceptionYear.set("2025")
         url.set("https://github.com/sk3llo/ffmpeg-kit-flutter")
         licenses {
@@ -100,10 +107,15 @@ signing {
     val signingKey = providers.gradleProperty("signing.key")
     val signingPassword = providers.gradleProperty("signing.password")
 
-    val shouldSign = signingKey.isPresent && signingPassword.isPresent
-
-    if (shouldSign) {
+    if (signingKey.isPresent && signingPassword.isPresent) {
         useInMemoryPgpKeys(signingKey.get(), signingPassword.get())
         sign(publishing.publications)
+    } else {
+        // Delegate to the local `gpg` binary (signing.gnupg.keyName /
+        // signing.gnupg.passphrase in ~/.gradle/gradle.properties). GnuPG 2.4+
+        // stores/exports secret keys in an AEAD format that Gradle's bundled
+        // BouncyCastle cannot decrypt — a secretKeyRingFile export fails with
+        // "PGPException: checksum mismatch" even when the passphrase is correct.
+        useGpgCmd()
     }
 }
