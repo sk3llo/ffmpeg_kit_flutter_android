@@ -13,7 +13,7 @@ mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
 
-    coordinates("com.antonkarpenko", "ffmpeg-kit-min-gpl", "2.2.1")
+    coordinates("com.antonkarpenko", "ffmpeg-kit-min-gpl", "2.2.2")
 
     pom {
         name.set("FFmpeg v8.1.1 Min-GPL")
