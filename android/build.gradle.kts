@@ -50,7 +50,7 @@ mavenPublishing {
 android {
     namespace = "com.antonkarpenko"
     compileSdk = 36
-    version = "2.2.1"
+    version = "2.2.2"
 
     defaultConfig {
         minSdk = 24
