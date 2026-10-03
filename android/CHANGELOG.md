@@ -1,3 +1,8 @@
+## 2.2.3
+
+* No library changes: the native libraries are byte-identical to the previous release (FFmpeg n8.1.2).
+* Fixed the POM metadata. The name and description no longer say "FFmpeg v8.1.1", and the project and SCM URLs now point to this repository instead of a repository that does not exist.
+
 ## 2.1.0
 
 * 
