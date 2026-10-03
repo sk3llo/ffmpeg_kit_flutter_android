@@ -16,10 +16,10 @@ mavenPublishing {
     coordinates("com.antonkarpenko", "ffmpeg-kit-min", "2.2.2")
 
     pom {
-        name.set("FFmpeg v8.1.1 Min")
-        description.set("FFmpeg v8.1.1 Min")
+        name.set("FFmpegKit Min")
+        description.set("FFmpegKit for Android, Min variant, with FFmpeg 8.1.2 (n8.1.2) shared libraries")
         inceptionYear.set("2025")
-        url.set("https://github.com/sk3llo/ffmpeg-kit-flutter")
+        url.set("https://github.com/sk3llo/ffmpeg_kit_flutter_android")
         licenses {
             license {
                 name.set("LGPL 3.0")
@@ -35,9 +35,9 @@ mavenPublishing {
             }
         }
         scm {
-            connection.set("scm:git:github.com/sk3llo/ffmpeg-kit-flutter.git")
-            developerConnection.set("scm:git:ssh://github.com/sk3llo/ffmpeg-kit-flutter.git")
-            url.set("https://github.com/sk3llo/ffmpeg-kit-flutter/tree/master")
+            connection.set("scm:git:https://github.com/sk3llo/ffmpeg_kit_flutter_android.git")
+            developerConnection.set("scm:git:ssh://git@github.com/sk3llo/ffmpeg_kit_flutter_android.git")
+            url.set("https://github.com/sk3llo/ffmpeg_kit_flutter_android/tree/min")
         }
     }
 }
