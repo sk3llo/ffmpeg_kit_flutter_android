@@ -19,7 +19,7 @@ mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
 
-    coordinates("com.antonkarpenko", "ffmpeg-kit-https-gpl", "2.2.1")
+    coordinates("com.antonkarpenko", "ffmpeg-kit-https-gpl", "2.2.3")
 
     pom {
         name.set("FFmpegKit HTTPS-GPL")
@@ -57,7 +57,7 @@ mavenPublishing {
 android {
     namespace = "com.antonkarpenko"
     compileSdk = 36
-    version = "2.2.1"
+    version = "2.2.3"
 
     defaultConfig {
         minSdk = 24
