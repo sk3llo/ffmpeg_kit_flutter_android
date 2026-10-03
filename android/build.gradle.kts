@@ -13,7 +13,7 @@ mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
 
-    coordinates("com.antonkarpenko", "ffmpeg-kit-min", "2.2.2")
+    coordinates("com.antonkarpenko", "ffmpeg-kit-min", "2.2.3")
 
     pom {
         name.set("FFmpegKit Min")
@@ -45,7 +45,7 @@ mavenPublishing {
 android {
     namespace = "com.antonkarpenko"
     compileSdk = 36
-    version = "2.2.2"
+    version = "2.2.3"
 
     defaultConfig {
         minSdk = 24
