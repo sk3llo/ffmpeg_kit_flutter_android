@@ -40,6 +40,11 @@ bundled in `android/src/main/jniLibs/<abi>/` and shipped inside the artifact.
   Mirror the exact filename set already present in each `jniLibs/<abi>/`
   (`libffmpegkit*.so`, `libav*.so`, `libsw*.so`, `libffmpegkit_abidetect.so`, and the
   `_neon` variants under `armeabi-v7a/`).
+- **The notices for those libraries.** Copy the variant's `LICENSES/` folder from the
+  same native build into `android/LICENSES/`, replacing the old one (the ffmpeg-kit
+  packaging puts it next to `jni/`, in `android-<variant>/LICENSES`). The build puts it at
+  the root of the AAR, where app builds don't package it, and won't build the AAR
+  without `android/LICENSES/NOTICE.txt`.
 
 ## Publish one variant
 
