@@ -1,0 +1,32 @@
+FFmpegKit 8.1.3 for Android, "min" variant
+Slices: arm64-v8a, armeabi-v7a (plus its NEON build), x86 and x86_64.
+
+FFmpeg n8.1.3 (https://github.com/arthenica/FFmpeg/tree/n8.1.3), built as
+shared libraries and licensed LGPL-3.0-or-later. See FFmpeg/.
+scripts/android/ffmpeg.sh adds FFmpegKit's saf: protocol (the code in
+tools/protocols, LGPL-3.0-or-later) to libavformat/file.c,
+libavformat/protocols.c, libavutil/file.c and libavutil/file.h. No other
+FFmpeg source file is changed.
+libffmpegkit.so, libffmpegkit_abidetect.so, libffmpegkit_armv7a_neon.so and
+the Java classes in classes.jar are FFmpegKit, licensed LGPL-3.0-or-later.
+See ffmpeg-kit/LICENSE. Its fftools_* files are modified copies of FFmpeg's
+fftools (LGPL-2.1-or-later); ffmpeg-kit/FFTOOLS-CHANGES.txt lists the changes
+made since the lists in their headers.
+Build scripts and wrapper source: https://github.com/sk3llo/ffmpeg-kit/tree/android-apple-8.1.3
+(built at commit 54e7d5839259).
+Toolchain: Android NDK r29 (29.0.14206865), clang 21.0.0 (r563880c).
+
+Third-party libraries compiled into the binaries above. Each was built from
+the source listed, by scripts/android/<library>.sh in the FFmpegKit source;
+files that the build changes are listed. Each library's license files are
+under third-party/<library>/.
+
+cpu_features 0.11.0
+  License: Apache-2.0
+  License files: third-party/cpu-features/ (LICENSE)
+  Source: https://github.com/arthenica/cpu_features, tag v0.11.0 (commit
+    81d13c49649f)
+  Compiled into: libffmpegkit_abidetect
+
+Used from the operating system, not included: libandroid.so, libc.so,
+libcamera2ndk.so, libdl.so, liblog.so, libm.so, libmediandk.so, libz.so.
