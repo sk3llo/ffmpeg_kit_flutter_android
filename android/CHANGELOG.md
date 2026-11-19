@@ -1,3 +1,11 @@
+## 2.3.0
+
+* FFmpeg n8.1.3. FFmpeg and every third-party library are now built from source at pinned versions, most of them upgraded. `LICENSES/NOTICE.txt` in the AAR lists each library with its version and source.
+* Rotation set with `-display_rotation`, `-display_hflip` and `-display_vflip` is now applied, and FFprobe reports each stream's side data again.
+* Video with no colour information is no longer tagged as RGB when encoded.
+* x86_64: FFmpeg's own x86 assembly is now built in; it was left out before.
+* The AAR carries `LICENSES/`: the licence notices for FFmpeg, FFmpegKit and each third-party library in this variant. Apps don't package it.
+
 ## 2.2.3
 
 * No library changes: the native libraries are byte-identical to the previous release (FFmpeg n8.1.2).
