@@ -79,8 +79,10 @@ public class Packages {
         final boolean fribidi = externalLibraryList.contains("fribidi");
         final boolean gnutls = externalLibraryList.contains("gnutls");
         final boolean xvid = externalLibraryList.contains("xvid");
+        final boolean x264 = externalLibraryList.contains("x264");
 
         boolean minGpl = false;
+        boolean converterGpl = false;
         boolean https = false;
         boolean httpsGpl = false;
         boolean audio = false;
@@ -107,6 +109,10 @@ public class Packages {
         } else {
             if (gnutls) {
                 https = true;
+            } else if (x264) {
+                // converter-gpl (#166) is GPL through x264/x265 but carries no xvid, so it
+                // falls past the xvid branch above and has to be identified here.
+                converterGpl = true;
             }
         }
 
@@ -239,6 +245,21 @@ public class Packages {
                     externalLibraryList.contains("x265") &&
                     externalLibraryList.contains("xvid")) {
                 return "min-gpl";
+            } else {
+                return "custom";
+            }
+        }
+
+        if (converterGpl) {
+            if (externalLibraryList.contains("dav1d") &&
+                    externalLibraryList.contains("mp3lame") &&
+                    externalLibraryList.contains("libvorbis") &&
+                    externalLibraryList.contains("libvpx") &&
+                    externalLibraryList.contains("libwebp") &&
+                    externalLibraryList.contains("opus") &&
+                    externalLibraryList.contains("x264") &&
+                    externalLibraryList.contains("x265")) {
+                return "converter-gpl";
             } else {
                 return "custom";
             }
