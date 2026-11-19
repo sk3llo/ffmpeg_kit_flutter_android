@@ -13,11 +13,11 @@ mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
 
-    coordinates("com.antonkarpenko", "ffmpeg-kit-min-gpl", "2.2.3")
+    coordinates("com.antonkarpenko", "ffmpeg-kit-converter-gpl", "2.3.0")
 
     pom {
-        name.set("FFmpegKit Min-GPL")
-        description.set("FFmpegKit for Android, Min-GPL variant, with FFmpeg 8.1.2 (n8.1.2) shared libraries")
+        name.set("FFmpegKit Converter-GPL")
+        description.set("FFmpegKit for Android, Converter-GPL variant, with FFmpeg 8.1.3 (n8.1.3) shared libraries")
         inceptionYear.set("2025")
         url.set("https://github.com/sk3llo/ffmpeg_kit_flutter_android")
         licenses {
@@ -42,7 +42,7 @@ mavenPublishing {
         scm {
             connection.set("scm:git:https://github.com/sk3llo/ffmpeg_kit_flutter_android.git")
             developerConnection.set("scm:git:ssh://git@github.com/sk3llo/ffmpeg_kit_flutter_android.git")
-            url.set("https://github.com/sk3llo/ffmpeg_kit_flutter_android/tree/min-gpl")
+            url.set("https://github.com/sk3llo/ffmpeg_kit_flutter_android/tree/converter-gpl")
         }
     }
 }
@@ -50,7 +50,7 @@ mavenPublishing {
 android {
     namespace = "com.antonkarpenko"
     compileSdk = 36
-    version = "2.2.3"
+    version = "2.3.0"
 
     defaultConfig {
         minSdk = 24

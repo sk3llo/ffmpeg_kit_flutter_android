@@ -16,6 +16,7 @@ bundled in `android/src/main/jniLibs/<abi>/` and shipped inside the artifact.
 | video     | `com.antonkarpenko:ffmpeg-kit-video`       |
 | full      | `com.antonkarpenko:ffmpeg-kit-full`        |
 | full-gpl  | `com.antonkarpenko:ffmpeg-kit-full-gpl`    |
+| converter-gpl | `com.antonkarpenko:ffmpeg-kit-converter-gpl` |
 
 > `master` is not a Maven producer (different layout) — nothing to publish there.
 
@@ -61,7 +62,7 @@ scripts/publish-maven.sh --release  # upload AND auto-release (irreversible)
 ## Publish all variants
 
 ```bash
-for b in min min-gpl https https-gpl audio video full full-gpl; do
+for b in min min-gpl https https-gpl audio video full full-gpl converter-gpl; do
   echo "=== $b ==="
   git checkout "$b"
   # >>> copy the FFmpeg 8.1.1 .so into android/src/main/jniLibs/<abi>/ for THIS variant <<<
