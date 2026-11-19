@@ -115,3 +115,16 @@ signing {
         useGpgCmd()
     }
 }
+
+// android/LICENSES/ holds the notices for the native libraries in src/main/jniLibs and is
+// replaced together with them. It goes to the root of the AAR, which app builds don't
+// package; under assets/ or res/ it would be copied into every app.
+tasks.withType<com.android.build.gradle.tasks.BundleAar>().configureEach {
+    val notices = layout.projectDirectory.dir("LICENSES")
+    from(notices) { into("LICENSES") }
+    doFirst {
+        check(notices.file("NOTICE.txt").asFile.isFile) {
+            "android/LICENSES/NOTICE.txt is missing: copy this variant's LICENSES/ from the native build"
+        }
+    }
+}
