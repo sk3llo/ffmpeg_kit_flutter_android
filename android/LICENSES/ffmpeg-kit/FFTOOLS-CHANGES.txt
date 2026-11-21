@@ -1,16 +1,12 @@
-FFmpegKit's fftools_*.c and fftools_*.h files are modified copies of the fftools
-sources of FFmpeg (LGPL-2.1-or-later). Each file's header lists FFmpegKit's
-changes up to 07.2023. Changes made since then, by date:
+FFmpegKit's fftools/ files are modified copies of the fftools sources of
+FFmpeg n9.1 (LGPL-2.1-or-later). They come from FFmpegKitNext
+(https://github.com/arthenica/ffmpeg-kit-next, LGPL-3.0-or-later), whose
+changes each file's header lists. Changes made in this repository, by date:
 
-2025-06-09  (Android) fftools_ffmpeg_mux_init.c: compile fixes
-2025-07-13  (Android) fftools_ffmpeg_mux_init.c: updated for FFmpeg 7.1.1
-2025-10-09  (all) ported to FFmpeg 8.0
-2026-06-28  (all) set the abuffersink all_channel_counts option through
-            filter arguments (FFmpeg 8.x)
-2026-07-28  (Linux) ported the FFmpeg 8.x fftools from the Windows copy;
-            av_noreturn placed so C++ units compile
-2026-10-30  (Android, Apple) apply -display_rotation, -display_hflip and
-            -display_vflip; restore side_data_list for streams in ffprobe
-2026-11-18  (all) video with no colour information is no longer tagged as RGB
+2026-11-20  (all) replaced with FFmpegKitNext's fftools
+            (arthenica/ffmpeg-kit-next at d031df3, based on FFmpeg n9.0.2),
+            merged with FFmpeg n9.1's fftools
+2026-11-20  (Windows) prepare_app_arguments() keeps the arguments FFmpegKit
+            passes instead of reading the host process's command line
 
-History: https://github.com/sk3llo/ffmpeg-kit/commits/android-apple-8.1.3
+History: https://github.com/sk3llo/ffmpeg-kit/commits/android-apple-9.1-beta.1
