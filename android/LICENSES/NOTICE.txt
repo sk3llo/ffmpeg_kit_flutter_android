@@ -1,21 +1,23 @@
-FFmpegKit 8.1.3 for Android, "converter-gpl" variant
+FFmpegKit 9.1-beta.1 for Android, "converter-gpl" variant
 Slices: arm64-v8a, armeabi-v7a (plus its NEON build), x86 and x86_64.
 
-FFmpeg n8.1.3 (https://github.com/arthenica/FFmpeg/tree/n8.1.3), built as
+FFmpeg n9.1 (https://github.com/FFmpeg/FFmpeg/tree/n9.1), built as
 shared libraries and licensed GPL-3.0-or-later. See FFmpeg/.
 scripts/android/ffmpeg.sh adds FFmpegKit's saf: protocol (the code in
 tools/protocols, LGPL-3.0-or-later) to libavformat/file.c,
-libavformat/protocols.c, libavutil/file.c and libavutil/file.h. No other
-FFmpeg source file is changed.
+libavformat/protocols.c, libavutil/file.c and libavutil/file.h, and makes
+av_log_level in libavutil/log.c thread-local, so each session keeps its own
+log level. No other FFmpeg source file is changed.
 libffmpegkit.so, libffmpegkit_abidetect.so, libffmpegkit_armv7a_neon.so and
 the Java classes in classes.jar are FFmpegKit, licensed LGPL-3.0-or-later.
-See ffmpeg-kit/LICENSE. Its fftools_* files are modified copies of FFmpeg's
-fftools (LGPL-2.1-or-later); ffmpeg-kit/FFTOOLS-CHANGES.txt lists the changes
-made since the lists in their headers.
+See ffmpeg-kit/LICENSE. Its fftools/ files are modified copies of FFmpeg's
+fftools (LGPL-2.1-or-later), ported by FFmpegKitNext
+(https://github.com/arthenica/ffmpeg-kit-next, LGPL-3.0-or-later), which also
+wrote ffmpeg_context.c; ffmpeg-kit/FFTOOLS-CHANGES.txt lists the changes.
 This variant is built with --enable-gpl and includes GPL-licensed libraries,
 so the bundle as a whole is distributed under GPL-3.0-or-later.
-Build scripts and wrapper source: https://github.com/sk3llo/ffmpeg-kit/tree/android-apple-8.1.3
-(built at commit e6cd910cd704).
+Build scripts and wrapper source: https://github.com/sk3llo/ffmpeg-kit/tree/android-apple-9.1-beta.1
+(built at commit 0a3d734725ef).
 Toolchain: Android NDK r29 (29.0.14206865), clang 21.0.0 (r563880c).
 
 Third-party libraries compiled into the binaries above. Each was built from
