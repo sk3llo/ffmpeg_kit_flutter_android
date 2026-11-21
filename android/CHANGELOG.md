@@ -1,3 +1,10 @@
+## 3.0.0-beta01
+
+* FFmpeg n9.1 (was n8.1.3), with FFmpeg 9's multi-threaded fftools, ported from FFmpegKitNext. The Java API is unchanged.
+* HTTPS certificates are checked by default (FFmpeg 9): expired, self-signed and wrong-host certificates now fail, and GnuTLS checks against Android's system certificates. `-tls_verify 0` before an input's `-i` turns the check off for it.
+* Removed `ffmpeg` options: `-vsync` (use `-fps_mode`), `-map_channel`, `-psnr`, `-top`, `-absf`, `-vbsf`, `-filter_script`, `-filter_complex_script`, `-qphist` and `-adrift_threshold`. `-copytb` is accepted but has no effect.
+* Newer libraries, in the variants that include them: GnuTLS 3.8.14 with GNU Libtasn1 4.21.0, FreeType 2.15.0, HarfBuzz 15.2.0, OpenH264 2.7.0, snappy 1.3.1 and giflib 6.1.3.
+
 ## 2.3.0
 
 * FFmpeg n8.1.3. FFmpeg and every third-party library are now built from source at pinned versions, most of them upgraded. `LICENSES/NOTICE.txt` in the AAR lists each library with its version and source.
