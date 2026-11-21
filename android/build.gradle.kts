@@ -13,11 +13,11 @@ mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
 
-    coordinates("com.antonkarpenko", "ffmpeg-kit-audio", "2.3.0")
+    coordinates("com.antonkarpenko", "ffmpeg-kit-audio", "3.0.0-beta01")
 
     pom {
         name.set("FFmpegKit Audio")
-        description.set("FFmpegKit for Android, Audio variant, with FFmpeg 8.1.3 (n8.1.3) shared libraries")
+        description.set("FFmpegKit for Android, Audio variant, with FFmpeg 9.1 (n9.1) shared libraries")
         inceptionYear.set("2025")
         url.set("https://github.com/sk3llo/ffmpeg_kit_flutter_android")
         licenses {
@@ -45,7 +45,7 @@ mavenPublishing {
 android {
     namespace = "com.antonkarpenko"
     compileSdk = 36
-    version = "2.3.0"
+    version = "3.0.0-beta01"
 
     defaultConfig {
         minSdk = 24
